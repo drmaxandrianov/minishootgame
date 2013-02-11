@@ -11,7 +11,7 @@ function setMouseCoords(event) {
 var game = {
 	screenWidth: 640,
 	screenHeight: 480,
-	bulletSpeed: 10,
+	bulletSpeed: 3,
 	fps: 60
 };
 
@@ -21,7 +21,7 @@ var avatarState = {
 	dead: "dead"
 }
 var avatarProfile = {
-	state: avatarState.dead,
+	state: avatarState.alive,
 	posX: 10,
 	posY: 10,
 	life: 100,
@@ -32,7 +32,8 @@ var avatarBullets = [];
 //var bullet = {
 //	posX,
 //	poxY,
-//	angle
+//	angle,
+//	speed
 //}
 
 
@@ -50,14 +51,15 @@ function avatarShoot(mouseX, mouseY) {
 	var bullet = {
 		posX: avX,
 		posY: avY,
-		angle: getAngle(avX, avY, mouseX, mouseY)
+		angle: getAngle(avX, avY, mouseX, mouseY),//getAngle(avX, avY, mouseX, mouseY),Math.random() * Math.PI * 2,
+		speed: 10
 	}
 	avatarBullets.push(bullet);
 }
 
 function getAngle(x0, y0, x1, y1) {
 	var dX = x0 - x1;
-	var dY = y0 - y1;
+	var dY = y0 - y1;/*
 	if (dX = 0) {
 		if (dY < 0) {
 			return -Math.PI / 2;
@@ -66,23 +68,32 @@ function getAngle(x0, y0, x1, y1) {
 		} else {
 			return Math.random() * 2 * Math.PI;
 		}
-	} else if (dX > 0) {
-		return Math.atan2(dX, dY);
-	} else if (dX < 0) {
-		return Math.PI - Math.atan2(-dX, dY);
+	} else*/
+	if (dY >= 0) {
+		return Math.PI/2 + Math.atan2(dX, -dY);
+	} else if (dY < 0) {
+		return -(Math.PI/2 + Math.atan2(dX, dY));
 	}
 }
 
 function calcBullets() {
-	for (var i = 0; i < dots.length; i++) {
-		if (dots[i].x < 0 || dots[i].x > game.screenWidth) {
-			dots[i].angle = Math.PI - dots[i].angle;
+	for (i in avatarBullets) {
+		
+		//var bX = avatarBullets[i].posX;
+		//var bY = avatarBullets[i].posY;
+		/*
+		if (avatarBullets[i].posX < 0 || avatarBullets[i].posX > game.screenWidth) {
+			avatarBullets[i].angle = Math.PI - avatarBullets[i].angle;
 		}
-		if (dots[i].y < 0 || dots[i].y > game.screenHeight) {
-			dots[i].angle = -dots[i].angle;
+		if (avatarBullets[i].posY < 0 || avatarBullets[i].posY > game.screenHeight) {
+			avatarBullets[i].angle = -avatarBullets[i].angle;
 		}
-		dots[i].x = dots[i].x + Math.cos(dots[i].angle) * game.currentDotsSpeed;
-		dots[i].y = dots[i].y + Math.sin(dots[i].angle) * game.currentDotsSpeed;
+		*/
+		avatarBullets[i].posX += Math.cos(avatarBullets[i].angle) * avatarBullets[i].speed;
+		avatarBullets[i].posY += Math.sin(avatarBullets[i].angle) * avatarBullets[i].speed;
+		
+		//avatarBullets[i].posX += 5;
+		//avatarBullets[i].posY += 5;
 	}
 }
 
@@ -92,6 +103,7 @@ function gameLoop() {
 	processKeys();
 	drawBackground();
 	drawAvatar();
+	calcBullets();
 	drawBullets();
 }
 
@@ -146,11 +158,11 @@ function drawAvatar() {
 }
 
 function drawBullets() {
-	for (var index in avatarBullets) {
+	for (index in avatarBullets) {
 		var bX = avatarBullets[index].posX;
 		var bY = avatarBullets[index].posY;
 		$("canvas").drawEllipse({
-			fillStyle: "#f55",
+			fillStyle: "#d55",
 			x: bX, y: bY,
 			width: 5, height: 5
 		});
