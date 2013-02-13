@@ -206,3 +206,33 @@ $(document).bind("keyup", function(event) {
         keyRight = false;
     }
 });
+
+
+
+
+// Network
+function onlineUpdatePosition(posX, posY, angle) {
+	$.getJSON(
+	"/updatePosition.php", // The server URL to update position
+	{ x: posX, y: posY, a: angle }, // Data sent to server
+	localUpdatePosition // The function to call on completion.
+	);
+}
+
+function localUpdatePosition(json) {
+	// This function will update other avatars positions.
+	// This function called after sending player's avatar position to server.
+	alert(json);
+}
+
+// This ID parameter is sent by our javascript client.
+//$id = $_GET['id'];
+
+// Here's some data that we want to send via JSON.
+// We'll include the $id parameter so that we
+// can show that it has been passed in correctly.
+// You can send whatever data you like.
+//$data = array("Hello", $id);
+
+// Send the data.
+//echo json_encode($data);
